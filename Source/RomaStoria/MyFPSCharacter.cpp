@@ -3,6 +3,7 @@
 #include "RomaStoria.h"
 #include "MyFPSCharacter.h"
 #include "MyFPSProjectile.h"
+#include "MyFPSHUD.h"
 #include "ItemPickUp.h"
 #include "NotePickUp.h"
 
@@ -191,6 +192,9 @@ void AMyFPSCharacter::OnPickUpItem(AItemPickUp* ItemPickUp)
 {
 	Inventory.Add(ItemPickUp);
 	// REMOVE when testing is done
+	AMyFPSHUD* MyHUD = Cast<AMyFPSHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+	MyHUD->DrawInventoryItems(&Inventory);
+
 	if (GEngine)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("I Stored the ItemPickUp in my Inventory."));

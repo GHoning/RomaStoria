@@ -15,7 +15,11 @@ AMyFPSGameMode::AMyFPSGameMode(const class FPostConstructInitializeProperties& P
 		DefaultPawnClass = (UClass*)PlayerPawnObject.Object->GeneratedClass;
 	}
 
-	HUDClass = AMyFPSHUD::StaticClass();
+	static ConstructorHelpers::FObjectFinder<UBlueprint> TheHUDOb(TEXT("Blueprint'/Game/Blueprints/BP_HUD'"));
+	if (TheHUDOb.Object != NULL)
+	{
+		HUDClass = (UClass*)TheHUDOb.Object->GeneratedClass;
+	}
 }
 
 void AMyFPSGameMode::StartPlay()

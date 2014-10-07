@@ -23,7 +23,7 @@ class ROMASTORIA_API AInteractableActor : public AActor
 		TSubobjectPtr<UStaticMeshComponent> InteractableMesh;
 
 	/* Function to call when the object is interacted with */
-	UFUNCTION(BlueprintNativeEvent)
+	UFUNCTION(BlueprintNativeEvent, Category = Interactable)
 		void OnInteraction();
 	
 };
