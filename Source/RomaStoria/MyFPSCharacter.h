@@ -30,27 +30,38 @@ class ROMASTORIA_API AMyFPSCharacter : public ACharacter
 
 protected:
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
+
 	/* handles moving forward/backward*/
 	UFUNCTION()
 		void MoveForward(float Value);
+
 	/* handles strafing */
 	UFUNCTION()
 		void MoveRight(float Value);
+
 	/* sets jump flag when key is pressed*/
 	UFUNCTION()
 		void OnStartJump();
+
 	/* clears jump flag when key is released */
 	UFUNCTION()
 		void OnStopJump();
+
 	/* handles firing */
 	UFUNCTION()
 		void OnFire();
+
 	/* handles interaction with other actors */
 	UFUNCTION()
 		void OnInteract();
+
 	/* handles the storing of items */
 	UFUNCTION()
 		void OnPickUpItem(AItemPickUp* ItemPickUp);
+
+	/* handles the dropping of items */
+	UFUNCTION()
+		void OnDropItem();
 	
 
 public:
@@ -64,4 +75,7 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category = Projectile)
 		TSubclassOf<class AMyFPSProjectile> ProjectileClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = HUD)
+		UTexture2D* InventoryItem;
 };

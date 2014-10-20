@@ -3,13 +3,14 @@
 #include "RomaStoria.h"
 #include "MyFPSCharacter.h"
 #include "MyFPSProjectile.h"
-#include "MyFPSHUD.h"
+#include "RS_FPSHUD.h"
 #include "ItemPickUp.h"
 #include "NotePickUp.h"
+#include "Engine/Canvas.h"
 
 
 AMyFPSCharacter::AMyFPSCharacter(const class FPostConstructInitializeProperties& PCIP)
-	: Super(PCIP)
+: Super(PCIP)
 {
 	// Create a CameraComponent
 	FirstPersonCameraComponent = PCIP.CreateDefaultSubobject<UCameraComponent>(this, TEXT("FirstPersonCamera"));
@@ -51,6 +52,7 @@ void AMyFPSCharacter::SetupPlayerInputComponent(UInputComponent* InputComponent)
 	InputComponent->BindAction("Jump", IE_Released, this, &AMyFPSCharacter::OnStopJump);
 	InputComponent->BindAction("Fire", IE_Pressed, this, &AMyFPSCharacter::OnFire);
 	InputComponent->BindAction("Interact", IE_Pressed, this, &AMyFPSCharacter::OnInteract);
+	InputComponent->BindAction("DropItem", IE_Pressed, this, &AMyFPSCharacter::OnDropItem);
 
 	InputComponent->BindAxis("MoveForward", this, &AMyFPSCharacter::MoveForward);
 	InputComponent->BindAxis("MoveRight", this, &AMyFPSCharacter::MoveRight);
@@ -151,7 +153,7 @@ void AMyFPSCharacter::OnInteract()
 
 	FHitResult RV_Hit(ForceInit);
 
-	GetWorld()->LineTraceSingle(RV_Hit,Start,End,ECC_Pawn,RV_TraceParams);
+	GetWorld()->LineTraceSingle(RV_Hit, Start, End, ECC_Pawn, RV_TraceParams);
 
 	if (RV_Hit.GetActor() != NULL) {
 		CollisionSphere->GetOverlappingActors(OverlappingActors);
@@ -185,19 +187,24 @@ void AMyFPSCharacter::OnInteract()
 		}
 	}
 
-	
+
 }
 
 void AMyFPSCharacter::OnPickUpItem(AItemPickUp* ItemPickUp)
 {
 	Inventory.Add(ItemPickUp);
-	// REMOVE when testing is done
-	AMyFPSHUD* MyHUD = Cast<AMyFPSHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
-	MyHUD->DrawInventoryItems(&Inventory);
 
 	if (GEngine)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("I Stored the ItemPickUp in my Inventory."));
 	}
 
+}
+
+void AMyFPSCharacter::OnDropItem()
+{
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("I dropped the ItemPickUp in my Inventory."));
+	}
 }

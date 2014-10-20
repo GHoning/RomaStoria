@@ -39,6 +39,7 @@ AMyFPSHUD::AMyFPSHUD(const class FPostConstructInitializeProperties& PCIP)
 {
 	//drawhud
 	DontDrawHUD = false;
+	DontDrawMenu = true;
 
 	//states
 	ConfirmDialogOpen = false;
@@ -317,28 +318,29 @@ void AMyFPSHUD::DrawToolTip()
 
 void AMyFPSHUD::DrawInventorySlots()
 {
-	float x = Canvas->SizeX / 2 - (InventorySpace->GetSurfaceWidth() * (InventorySlots/2));
-	float y = Canvas->SizeY - InventorySpace->GetSurfaceHeight();
+	float x = Canvas->SizeX / 2 - (InventorySlot->GetSurfaceWidth() * (InventorySlots/2));
+	float y = Canvas->SizeY - InventorySlot->GetSurfaceHeight();
 	
-
 	for (int i = 0; i < InventorySlots; i++)
 	{
-		DrawFullSizeTile(InventorySpace, x, y, FColor_White);
-		x = x + InventorySpace->GetSurfaceWidth();
+		DrawFullSizeTile(InventorySlot, x, y, FColor_White);
+		x = x + InventorySlot->GetSurfaceWidth();
 	}
 }
 
-void AMyFPSHUD::DrawInventoryItems(TArray<AItemPickUp*>* Inventory)
+void AMyFPSHUD::DrawInventoryItems(int32 length)
 {
-	float x = Canvas->SizeX / 2 - (ItemIcon->GetSurfaceWidth()) - ((InventorySpace->GetSurfaceWidth() - ItemIcon->GetSurfaceWidth()) / 2);;
-	float y = Canvas->SizeY - ItemIcon->GetSurfaceHeight() - ( (InventorySpace->GetSurfaceHeight() - ItemIcon->GetSurfaceHeight())/2 );
+	/*float x = Canvas->SizeX / 2 - (ItemIcon->GetSurfaceWidth()) - ((InventorySpace->GetSurfaceWidth() - ItemIcon->GetSurfaceWidth()) / 2);
+	float y = Canvas->SizeY - ItemIcon->GetSurfaceHeight() - ((InventorySpace->GetSurfaceHeight() - ItemIcon->GetSurfaceHeight()) / 2);
 
-	for (int i = 0; i < Inventory->Num(); i++)
+
+
+
+	for (int i = 0; i < length; i++)
 	{
-		/*DrawFullSizeTile(ItemIcon, x, y, FColor_White);
-		x = x + InventorySpace->GetSurfaceWidth();*/
-	}
-	
+		DrawFullSizeTile(ItemIcon, x, y, FColor_White);
+		x = x + InventorySpace->GetSurfaceWidth();
+	}*/
 }
 
 void AMyFPSHUD::DrawHUD_DrawCursor()
@@ -364,22 +366,16 @@ void AMyFPSHUD::DrawHUD_DrawCursor()
 
 void AMyFPSHUD::PlayerInputChecks()
 {
-	//check out this tutorial for a list of all EKeys::
-	//http://forums.epicgames.com/threads/972861-Tutorials-C-for-UE4-Code-Samples-gt-gt-New-Video-Freeze-Render-When-Tabbed-Out?p=31660286&viewfull=1#post31660286
 
 	if (ThePC->WasInputKeyJustPressed(EKeys::Escape))
 	{
 		SetCursorMoveOnly(false);
 		return;
 	}
-	if (ThePC->WasInputKeyJustPressed(EKeys::F))
-	{
-		SetCursorMoveOnly(!ThePC->IsLookInputIgnored());
-		return;
-	}
 	if (ThePC->WasInputKeyJustPressed(EKeys::H))
 	{
-		DontDrawHUD = !DontDrawHUD;
+		DontDrawMenu = !DontDrawMenu;
+		SetCursorMoveOnly(!ThePC->IsLookInputIgnored());
 		return;
 	}
 	
@@ -413,19 +409,7 @@ void AMyFPSHUD::DrawHUD_Reset()
 
 void AMyFPSHUD::DrawHUD()
 {
-	//==============================
-	//==============================
-	//==============================
-	//Have PC for Input Checks and Mouse Cursor?
-	if (!ThePC)
-	{
-		//Attempt to Reacquire PC
-		ThePC = GetOwningPlayerController();
-
-		//Could Not Obtain PC
-		if (!ThePC) return;
-		//~~
-	}
+	
 
 	//Multiplayer Safety Check
 	if (!ThePC->PlayerInput) return; //not valid for first seconds of a multiplayer client
@@ -438,58 +422,85 @@ void AMyFPSHUD::DrawHUD()
 	PlayerInputChecks();
 
 	//Draw HUD?
-	if (DontDrawHUD) return;
+	//if (DontDrawMenu) return;
 	//~~
 
-	//Super
-	Super::DrawHUD();
+	if (!DontDrawMenu)
+	{
+		//Super
+		Super::DrawHUD();
 
-	//No Canvas?
-	if (!Canvas) return;
-	//
+		//No Canvas?
+		if (!Canvas) return;
+		//
 
-	//Reset States
-	DrawHUD_Reset();
+		//Reset States
+		DrawHUD_Reset();
 
-	//================
-	//Get New Mouse Position
-	//================
-	ThePC->GetMousePosition(MouseLocation.X, MouseLocation.Y);
+		//Cursor In Buttons
+		DrawHUD_CheckCursorInButtons();
 
-	//Cursor In Buttons
-	DrawHUD_CheckCursorInButtons();
+		//Draw Dialogs
+		DrawHUD_DrawDialogs();
 
-	//Draw Dialogs
-	DrawHUD_DrawDialogs();
-
-	//Draw Inventory slots and items
-	DrawInventorySlots();
-	//Get player->Inventory
-	//AMyFPSCharacter Player = Cast<AMyFPSCharacter(GetWorld->GetActor->)
+		//Draw Cursor
+		DrawHUD_DrawCursor();
+	}
+	else 
+	{
 	
-	/*AFPSHUD* MyHUD = Cast<AFPSHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
-	MyHUD->MyBooleanVariable = true;*/
+		//==============================
+		//==============================
+		//==============================
+		//Have PC for Input Checks and Mouse Cursor?
+		if (!ThePC)
+		{
+			//Attempt to Reacquire PC
+			ThePC = GetOwningPlayerController();
+
+			//Could Not Obtain PC
+			if (!ThePC) return;
+			//~~
+		}
 	
+		//Super
+		Super::DrawHUD();
+
+		//No Canvas?
+		if (!Canvas) return;
+		//
+
+		//Reset States
+		DrawHUD_Reset();
+
+		//Draw Inventory slots and items
+		DrawInventorySlots();
+
+		//Get player->Inventory
+		//AMyFPSCharacter Player = Cast<AMyFPSCharacter(GetWorld->GetActor->)
+		DrawInventoryItems(0);
 	
+		//AFPSHUD* MyHUD = Cast<AFPSHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+		//MyHUD->MyBooleanVariable = true;
 
-	
+		//### Do Last ###
+		//Draw Cursor
+		//DrawHUD_DrawCursor();
 
-	//### Do Last ###
-	//Draw Cursor
-	DrawHUD_DrawCursor();
+		//Debugging Info
+		//ThePC->ClientMessage("HUD Loop Completed!");
 
-	//Debugging Info
-	//ThePC->ClientMessage("HUD Loop Completed!");
+		// Draw very simple crosshair
+		// find center of the canvas
+		const FVector2D Center(Canvas->ClipX * 0.5f, Canvas->ClipY * 0.5f);
+		// offset by half of the texture's dimensions so that the center of the texture aligns with the center of the Canvas
+		const FVector2D CrosshairDrawPosition((Center.X - (CrosshairTex->GetSurfaceWidth() * 0.5f)),
+			(Center.Y - (CrosshairTex->GetSurfaceHeight()*0.5f)));
 
-	// Draw very simple crosshair
-	// find center of the canvas
-	const FVector2D Center(Canvas->ClipX * 0.5f, Canvas->ClipY * 0.5f);
-	// offset by half of the texture's dimensions so that the center of the texture aligns with the center of the Canvas
-	const FVector2D CrosshairDrawPosition((Center.X - (CrosshairTex->GetSurfaceWidth() * 0.5f)),
-		(Center.Y - (CrosshairTex->GetSurfaceHeight()*0.5f)));
+		// Draw the crosshair
+		FCanvasTileItem TileItem(CrosshairDrawPosition, CrosshairTex->Resource, FLinearColor::White);
+		TileItem.BlendMode = SE_BLEND_Translucent;
+		Canvas->DrawItem(TileItem);
+	}
 
-	// Draw the crosshair
-	FCanvasTileItem TileItem(CrosshairDrawPosition, CrosshairTex->Resource, FLinearColor::White);
-	TileItem.BlendMode = SE_BLEND_Translucent;
-	Canvas->DrawItem(TileItem);
 }

@@ -39,19 +39,25 @@ class ROMASTORIA_API AMyFPSHUD : public AHUD
 
 	/* Font Verdana */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = HUD)
-	UFont* VerdanaFont;
+		UFont* VerdanaFont;
 
 	/* Unreal Font */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = HUD)
 		UFont* UE4Font;
 
-	/* Font Scaling Used By Your HUD Code */
+	/* Font Scaling used by HUD Code */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = HUD)
 		float DefaultFontScale;
 
 	/*Font scaling */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = HUD)
 		float GlobalHUDMult;
+
+
+
+	//Clean up from here and write new one
+
+	//Cursors
 
 	/*Cursor*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = HUD)
@@ -61,28 +67,36 @@ class ROMASTORIA_API AMyFPSHUD : public AHUD
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = HUD)
 		UTexture2D* CursorHoveringButton;
 
+
+
+	//Butons and events
+
 	/*Buton*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = HUD)
 		UTexture2D* ButtonBackground;
-
-	/* Inventory */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = HUD)
-		UTexture2D* ItemIcon;
-
-	/* Items in Inventory */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = HUD)
-		UTexture2D* InventorySpace;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = HUD)
-		int32 InventorySlots;
-
 	/*Events*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = HUD)
 		UMaterialInterface* MaterialBackground;
 
+
+	// Bools
+
 	/*Draw HUD?*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = HUD)
 		bool DontDrawHUD;
+
+	/* Draw Menu */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = HUD)
+		bool DontDrawMenu;
+
+
+	/* InventorySlot Graphic */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = HUD)
+		UTexture2D* InventorySlot;
+
+	/* Amount of InventoryHUD slots */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = HUD)
+		int32 InventorySlots;
 
 
 	/*Cursor*/
@@ -207,7 +221,7 @@ public:
 
 	/* Inventory */
 	void DrawInventorySlots();
-	void DrawInventoryItems(TArray<AItemPickUp*>* Inventory);
+	void DrawInventoryItems(int32 length);
 
 	APlayerController* ThePC;
 	void PlayerInputChecks();
