@@ -182,6 +182,7 @@ void AMyFPSCharacter::OnInteract()
 				{
 					GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("I found an NotePickUp."));
 				}
+				OnPickUpNote(NotePickUp);
 				NotePickUp->OnInteraction();
 			}
 		}
@@ -201,10 +202,44 @@ void AMyFPSCharacter::OnPickUpItem(AItemPickUp* ItemPickUp)
 
 }
 
-void AMyFPSCharacter::OnDropItem()
+void AMyFPSCharacter::OnPickUpNote(ANotePickUp* NotePickUp)
 {
+	Notebook.Add(NotePickUp);
+
+	// REMOVE when testing is done
 	if (GEngine)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("I dropped the ItemPickUp in my Inventory."));
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("I stored the NotePickUp in my Notebook."));
+	}
+}
+
+void AMyFPSCharacter::OnDropItem()
+{
+	if (Inventory.Num() > 0)
+	{
+		// get the camera transform
+		FVector CameraLoc;
+		FRotator CameraRot;
+		GetActorEyesViewPoint(CameraLoc, CameraRot);
+		// SpellOffset is in camera space, so transform it to worldspace before offsetting from the camera to find the final spell position
+		FVector const ItemLocation = CameraLoc + FTransform(CameraRot).TransformVector(SpellOffset);
+		FRotator ItemRotation = CameraRot;
+		ItemRotation.Pitch += 10.0f; // skew the aim upwards a bit
+		UWorld* const World = GetWorld();
+		if (World)
+		{
+			FActorSpawnParameters SpawnParams;
+			SpawnParams.Owner = this;
+			SpawnParams.Instigator = Instigator;
+			// spawn the projectile at the spell location
+			AItemPickUp* const DropItem = World->SpawnActor<AItemPickUp>(PickUpItemClass, ItemLocation, ItemRotation, SpawnParams);
+		}
+
+		Inventory.RemoveAt(0);
+
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("I dropped the ItemPickUp in my Inventory."));
+		}
 	}
 }

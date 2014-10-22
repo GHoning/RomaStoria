@@ -3,6 +3,7 @@
 #pragma once
 
 #include "ItemPickUp.h"
+#include "NotePickUp.h"
 #include "GameFramework/Character.h"
 #include "MyFPSCharacter.generated.h"
 
@@ -27,6 +28,10 @@ class ROMASTORIA_API AMyFPSCharacter : public ACharacter
 	/* Inventory of the player */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Inventory)
 		TArray<AItemPickUp*> Inventory;
+
+	/* Notebook to keep the notes the player finds */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Inventory)
+		TArray<ANotePickUp*> Notebook;
 
 protected:
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
@@ -59,6 +64,10 @@ protected:
 	UFUNCTION()
 		void OnPickUpItem(AItemPickUp* ItemPickUp);
 
+	/* handles the storing of notes */
+	UFUNCTION()
+		void OnPickUpNote(ANotePickUp* NotePickUp);
+
 	/* handles the dropping of items */
 	UFUNCTION()
 		void OnDropItem();
@@ -75,6 +84,9 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category = Projectile)
 		TSubclassOf<class AMyFPSProjectile> ProjectileClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = PickUp)
+		TSubclassOf<class AItemPickUp> PickUpItemClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = HUD)
 		UTexture2D* InventoryItem;
