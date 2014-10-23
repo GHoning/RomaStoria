@@ -6,6 +6,7 @@
 #include "RS_FPSHUD.h"
 #include "ItemPickUp.h"
 #include "NotePickUp.h"
+#include "Door.h"
 #include "Engine/Canvas.h"
 
 
@@ -164,6 +165,7 @@ void AMyFPSCharacter::OnInteract()
 			// cast the collected actor to ItemPickUp and NotePickUp
 			AItemPickUp* const ItemPickUp = Cast<AItemPickUp>(OverlappingActors[iOverlapping]);
 			ANotePickUp* const NotePickUp = Cast<ANotePickUp>(OverlappingActors[iOverlapping]);
+			ADoor* const Door = Cast<ADoor>(OverlappingActors[iOverlapping]);
 
 			if (ItemPickUp) {
 				// REMOVE when testing is done
@@ -184,6 +186,14 @@ void AMyFPSCharacter::OnInteract()
 				}
 				OnPickUpNote(NotePickUp);
 				NotePickUp->OnInteraction();
+			}
+
+			if (Door && Inventory.Num() > 0) {
+				if (GEngine)
+				{
+					GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Open door"));
+				}
+				Door->OnInteraction();
 			}
 		}
 	}
