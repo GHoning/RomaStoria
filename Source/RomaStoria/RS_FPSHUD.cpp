@@ -75,7 +75,7 @@ void ARS_FPSHUD::DrawHUD_DrawDialogs()
 void ARS_FPSHUD::DrawMainMenu()
 {
 	//background
-	DrawMaterialSimple(MaterialBackground, 10, 10, 256, 512, 1.3);
+	DrawMaterialSimple(MaterialBackground, 10, 10, 256, 512, 0);
 	//Menu Title
 	//Draw buttons
 	DrawMainMenuButtons();
@@ -84,7 +84,7 @@ void ARS_FPSHUD::DrawMainMenu()
 void ARS_FPSHUD::DrawConfirm()
 {
 	//blue rect alpha 50%
-	DrawHUDRect(Canvas->SizeX / 2 - 100, Canvas->SizeY / 2 - 50, 200, 100, FLinearColor(0, 0, 1, 0.2333));
+	DrawHUDRect(Canvas->SizeX / 2 - 100, Canvas->SizeY / 2 - 50, 200, 100, FLinearColor(1, 1, 1, 0.2333));
 
 	DrawConfirmButtons();
 }
@@ -92,7 +92,7 @@ void ARS_FPSHUD::DrawConfirm()
 void ARS_FPSHUD::DrawNotebook()
 {
 	//blue rect alpha 50%
-	DrawHUDRect(Canvas->SizeX / 2 - 100, Canvas->SizeY / 2 - 50, 200, 100, FLinearColor(0, 0, 1, 0.2333));
+	DrawHUDRect(Canvas->SizeX / 2 - 100, Canvas->SizeY / 2 - 50, 200, 100, FLinearColor(1, 1, 1, 0.2333));
 	DrawNotebookButtons();
 }
 
@@ -103,10 +103,10 @@ void ARS_FPSHUD::DrawMainMenuButtons()
 	float yStart = 110;
 
 	//background
-	VDrawTile(ButtonBackground, xStart, yStart, 150, 80, FColor(255, 255, 255, 120));
+	VDrawTile(ButtonBackground, xStart, yStart, 150, 80, FColor(1, 1, 1, 0.2333));
 
 	//text
-	DrawHUDText(VerdanaFont, "Restart", xStart + 30, yStart + 20, LC_Black, DefaultFontScale, true, LC_Red);
+	DrawHUDText(VerdanaFont, "Restart", xStart + 30, yStart + 20, LC_Black, DefaultFontScale, true, FLinearColor(1, 1, 1, 0.2333));
 
 	if (ButtonsMain.Num() < 1)
 	{
@@ -124,9 +124,9 @@ void ARS_FPSHUD::DrawMainMenuButtons()
 	xStart = 100;
 	yStart = 210;
 
-	VDrawTile(ButtonBackground, xStart, yStart, 150, 80, FColor(255, 255, 255, 120));
+	VDrawTile(ButtonBackground, xStart, yStart, 150, 80, FColor(1, 1, 1, 0.2333));
 	//text
-	DrawHUDText(VerdanaFont, "Notebook", xStart + 55, yStart + 20, LC_Black, DefaultFontScale, true, LC_Red);
+	DrawHUDText(VerdanaFont, "Notebook", xStart + 55, yStart + 20, LC_Black, DefaultFontScale, true, FLinearColor(1, 1, 1, 0.2333));
 
 	if (ButtonsMain.Num() < 2)
 	{
@@ -145,9 +145,9 @@ void ARS_FPSHUD::DrawMainMenuButtons()
 	xStart = 100;
 	yStart = 410;
 
-	VDrawTile(ButtonBackground, xStart, yStart, 150, 80, FColor(255, 255, 255, 120));
+	VDrawTile(ButtonBackground, xStart, yStart, 150, 80, FColor(1, 1, 1, 0.2333));
 	//text
-	DrawHUDText(VerdanaFont, "Exit", xStart + 55, yStart + 20, LC_Black, DefaultFontScale, true, LC_Red);
+	DrawHUDText(VerdanaFont, "Exit", xStart + 55, yStart + 20, LC_Black, DefaultFontScale, true, FLinearColor(1, 1, 1, 0.2333));
 
 	if (ButtonsMain.Num() < 3)
 	{
@@ -169,8 +169,8 @@ void ARS_FPSHUD::DrawConfirmButtons()
 	float yStart = Canvas->SizeY / 2 - 40;
 
 	//highlighted
-	if (ActiveButton_Type == BUTTONTYPE_CONFIRM_YES) ColorPtr = &LC_Pink;
-	else ColorPtr = &LC_Yellow;
+	if (ActiveButton_Type == BUTTONTYPE_CONFIRM_YES) ColorPtr = &LC_Yellow;
+	else ColorPtr = &LC_Black;
 
 	//text
 	DrawHUDText(VerdanaFont, "Yes", xStart + 30, yStart + 20, *ColorPtr, DefaultFontScale, true);
@@ -191,8 +191,8 @@ void ARS_FPSHUD::DrawConfirmButtons()
 	yStart = Canvas->SizeY / 2 - 40;
 
 	//Highlighted?
-	if (ActiveButton_Type == BUTTONTYPE_CONFIRM_NO) ColorPtr = &LC_Black;
-	else ColorPtr = &LC_Yellow;
+	if (ActiveButton_Type == BUTTONTYPE_CONFIRM_NO) ColorPtr = &LC_Yellow;
+	else ColorPtr = &LC_Black;
 
 	//Text
 	DrawHUDText(
@@ -219,8 +219,8 @@ void ARS_FPSHUD::DrawNotebookButtons()
 	float yStart = Canvas->SizeY / 2 - 40;
 
 	//highlighted
-	if (ActiveButton_Type == BUTTONTYPE_NOTEBOOK_1) ColorPtr = &LC_Pink;
-	else ColorPtr = &LC_Yellow;
+	if (ActiveButton_Type == BUTTONTYPE_NOTEBOOK_1) ColorPtr = &LC_Yellow;
+	else ColorPtr = &LC_Black;
 
 	//text
 	DrawHUDText(VerdanaFont, "Note 1", xStart + 30, yStart + 20, *ColorPtr, DefaultFontScale, true);
@@ -241,8 +241,8 @@ void ARS_FPSHUD::DrawNotebookButtons()
 	yStart = Canvas->SizeY / 2 - 40;
 
 	//Highlighted?
-	if (ActiveButton_Type == BUTTONTYPE_NOTEBOOK_2) ColorPtr = &LC_Black;
-	else ColorPtr = &LC_Yellow;
+	if (ActiveButton_Type == BUTTONTYPE_NOTEBOOK_2) ColorPtr = &LC_Yellow;
+	else ColorPtr = &LC_Black;
 
 	//Text
 	DrawHUDText(
@@ -266,8 +266,8 @@ void ARS_FPSHUD::DrawNotebookButtons()
 void ARS_FPSHUD::DrawComicBook()
 {
 	//blue rect alpha 50%
-	DrawHUDRect(Canvas->SizeX / 2 - 100, Canvas->SizeY / 2 - 50, 200, 100, FLinearColor(0, 0, 1, 0.2333));
-	DrawHUDText(VerdanaFont, "Press H", Canvas->SizeX / 2 + 55, Canvas->SizeY / 2 + 20, LC_Black, DefaultFontScale, true, LC_Red);
+	DrawHUDRect(Canvas->SizeX / 2 - 100, Canvas->SizeY / 2 - 50, 200, 100, FLinearColor(1, 1, 1, 0.2333));
+	DrawHUDText(VerdanaFont, "Press H", Canvas->SizeX / 2 - 40, Canvas->SizeY / 2 + 10, LC_Black, DefaultFontScale, true, FLinearColor(1, 1, 1, 0.2333));
 }
 
 int32 ARS_FPSHUD::CheckCursorInButton(const TArray<FRS_FPSHUDButtonStruct>& ButtonArray)
@@ -413,13 +413,13 @@ void ARS_FPSHUD::DrawToolTip()
 		xStart, yStart,
 		RV_xLength + 70,
 		80,
-		FLinearColor(0, 0, 1, 0.7) //alpha 0.7
+		FLinearColor(0, 0, 0, 0.332) //alpha 0.7
 		);
 
 	//Tool Tip
 	DrawText(
 		ActiveButton_Tip,
-		LC_Pink,
+		LC_Black,
 		xStart + 32, yStart + 20,
 		UE4Font,
 		DefaultFontScale * 2,
